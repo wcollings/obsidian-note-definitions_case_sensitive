@@ -1,5 +1,6 @@
 import { getDefFileManager } from "src/core/def-file-manager";
 import { PTreeNode, PTreeTraverser } from "./prefix-tree";
+import { getSettings } from "src/settings";
 
 // Information of phrase that can be used to add decorations within the editor
 export interface PhraseInfo {
@@ -24,7 +25,13 @@ export class LineScanner {
 		const phraseInfos: PhraseInfo[] = [];
 
 		for (let i = 0; i < line.length; i++) {
-			const c = line.charAt(i).toLowerCase();
+			let c="";
+			if (getSettings().enableCaseSensitive) {
+				c = line.charAt(i);
+			}
+			else {
+				c = line.charAt(i).toLowerCase();
+			}
 			if (this.isValidStart(line, i)) {
 				traversers.push(new PTreeTraverser(this.prefixTree));
 			}
@@ -50,7 +57,13 @@ export class LineScanner {
 	}
 
 	private isValidEnd(line: string, ptr: number): boolean {
-		const c = line.charAt(ptr).toLowerCase();
+		let c="";
+		if (getSettings().enableCaseSensitive) {
+			c = line.charAt(ptr);
+		}
+		else {
+			c = line.charAt(ptr).toLowerCase();
+		}
 		if (this.isNonSpacedLanguage(c)) {
 			return true;
 		}
@@ -64,7 +77,13 @@ export class LineScanner {
 
 	// Check if this character is a valid start of a word depending on the context
 	private isValidStart(line: string, ptr: number): boolean {
-		const c = line.charAt(ptr).toLowerCase();
+		let c="";
+		if (getSettings().enableCaseSensitive) {
+			c = line.charAt(ptr);
+		}
+		else {
+			c = line.charAt(ptr).toLowerCase();
+		}
 		if (c == " ") {
 			return false;
 		}
